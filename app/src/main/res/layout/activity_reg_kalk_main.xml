@@ -7,52 +7,63 @@
     tools:context="regkalk2.kszajgapp.hu.regkalk.RegKalkMain">
 
 
-    <TextView
-        android:id="@+id/tv_ElsoForgDatum"
-        android:layout_width="227dp"
-        android:layout_height="15dp"
+    <LinearLayout
+        android:layout_width="368dp"
+        android:layout_height="495dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:fontFamily="monospace"
-        android:lines="2"
-        android:text="Első forgalombahelyezés dátuma"
-        android:textSize="12sp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/btn_ElsoForgDatum"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="wrap_content"
-        android:layout_height="34dp"
-        android:layout_marginTop="8dp"
-        android:text="2017. 12. 21."
-        android:textSize="12sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_ElsoForgDatum" />
-
-    <TextView
-        android:id="@+id/tv_KornyOsztaly"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:fontFamily="monospace"
-        android:text="Környezetvédelmi besorolás"
-        android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_ElsoForgDatum" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tv_KornyOsztaly"
-        app:layout_constraintTop_toTopOf="@+id/tv_KornyOsztaly" />
+        <Button
+            android:id="@+id/btn_ElsoForgDatum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Első forgalombahelyezés időpontja"
+            android:textAllCaps="false"
+            android:textSize="12sp"
+            android:onClick="showDatePickerDialog" />
+
+        <Spinner
+            android:id="@+id/spn_KornyOszt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Spinner
+            android:id="@+id/spn_Uzemanyag"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Spinner
+            android:id="@+id/spn_Loketterfogat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/et_Teljesitmeny"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Teljesítmény (kW)"
+            android:inputType="numberDecimal"
+            android:textSize="12sp" />
+
+        <Spinner
+            android:id="@+id/spn_Vizsga"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btn_Szamol"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Számítsd ki!"
+            android:textAllCaps="false"
+            android:textSize="12sp" />
+    </LinearLayout>
 </android.support.constraint.ConstraintLayout>
