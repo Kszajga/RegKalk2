@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">RegKalk</string>
 
-
+    <string name="KornyOszt">Környezetvédelmi osztály</string>
+    <string name="Uzemanyag">Üzemanyag</string>
 </resources>

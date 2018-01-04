@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="KornyOszt">
+        <item>Környezetvédelmi osztály</item>
+        <item>4 alatt (Euro 1)</item>
+        <item>4 (Euro 2)</item>
+        <item>6-8 (Euro 3)</item>
+        <item>9-11 (Euro 4)</item>
+        <item>12-14 (Euro 5)</item>
+        <item>15 (Euro 6)</item>
+    </string-array>
+
+    <string-array name="Uzemanyag">
+        <item>Üzemanyag típusa?</item>
+        <item>Benzin</item>
+        <item>Gázolaj</item>
+        <item>Hibrid</item>
+        <item>Elektromos / Plug-In Hybrid</item>
+    </string-array>
+
+    <string-array name="Muszaki">
+        <item>Van érvényes műszakija?</item>
+        <item>Igen</item>
+        <item>Nem</item>
+    </string-array>
+
+    <string-array name="JarmuTipus">
+        <item>Válasszon jármű típust!</item>
+        <item>Személyautó</item>
+        <item>Motor</item>
+        <item>Teherautó</item>
+    </string-array>
+
+    <string-array name="BenzinLoketterfogat">
+        <item>Lökettérfogat választása</item>
+        <item>0-1100</item>
+        <item>1101-1400</item>
+        <item>1401-1600</item>
+        <item>1601-1800</item>
+        <item>1801-2000</item>
+        <item>2001-2500</item>
+        <item>2500 felett</item>
+    </string-array>
+
+    <string-array name="GazolajLoketterfogat">
+        <item>Lökettérfogat választása</item>
+        <item>0-1300</item>
+        <item>1301-1500</item>
+        <item>1501-1700</item>
+        <item>1701-2000</item>
+        <item>2001-2500</item>
+        <item>2501-3000</item>
+        <item>3000 felett</item>
+    </string-array>
+</resources>
