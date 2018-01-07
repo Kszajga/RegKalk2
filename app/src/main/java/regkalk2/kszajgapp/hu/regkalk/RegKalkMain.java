@@ -1,5 +1,6 @@
 package regkalk2.kszajgapp.hu.regkalk;
 
+import android.arch.persistence.room.Room;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -38,6 +39,9 @@ public class RegKalkMain extends AppCompatActivity implements AdapterView.OnItem
 
         initUI();
         uploadDefaultItems();
+
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(),
+                AppDatabase.class, "regkalk").build();
     }
 
     private void fillSpinner(Spinner spinner, String[] dataArray) {

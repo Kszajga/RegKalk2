@@ -52,4 +52,13 @@
         <item>2501-3000</item>
         <item>3000 felett</item>
     </string-array>
+
+    <string-array name="MotorLoketterfogat">
+        <item>Lökettérfogat választása</item>
+        <item>0-80</item>
+        <item>81-125</item>
+        <item>126-500</item>
+        <item>501-900</item>
+        <item>901 felett</item>
+    </string-array>
 </resources>
