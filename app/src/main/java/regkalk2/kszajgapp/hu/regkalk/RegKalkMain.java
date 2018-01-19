@@ -1,6 +1,7 @@
 package regkalk2.kszajgapp.hu.regkalk;
 
-import android.arch.persistence.room.Room;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,6 +18,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,8 +42,15 @@ public class RegKalkMain extends AppCompatActivity implements AdapterView.OnItem
         initUI();
         uploadDefaultItems();
 
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class, "regkalk").build();
+        // Adatbázis inicializálása
+        AssetDatabaseHelper dbHelper = new AssetDatabaseHelper(getBaseContext(), "regkalk.db");
+        try {
+            dbHelper.importIfNotExist();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Log.d(TAG, "Alapdíj lekérése: " + dbHelper.getRegAdoAlapdij(1,1,1));
     }
 
     private void fillSpinner(Spinner spinner, String[] dataArray) {
