@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,14 +25,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class RegKalkMain extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class RegKalkMain extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
     private static final String TAG = "RegKalkMain";
 
     public Spinner spn_JarmuTipus, spn_KornyOszt, spn_Uzemanyag, spn_Loketterfogat, spn_Vizsga;
     private EditText et_Teljesitmeny;
-    private Button btn_Szamol;
-    private TextView tv_ElsoForgDatum;
+    private Button btn_Szamol, btn_ElsoForgDatum;
+    private AssetDatabaseHelper dbHelper;
+
+    private List<UIElementState> uiElementStateList = new ArrayList<>();
+
+    public Kalkulacio kalkulacio = new Kalkulacio();
 
     //private String[] KornyOszt = null;
 
@@ -43,16 +49,32 @@ public class RegKalkMain extends AppCompatActivity implements AdapterView.OnItem
         uploadDefaultItems();
 
         // Adatbázis inicializálása
-        AssetDatabaseHelper dbHelper = new AssetDatabaseHelper(getBaseContext(), "regkalk.db");
+        dbHelper = new AssetDatabaseHelper(getBaseContext(), "regkalk.db");
         try {
             dbHelper.importIfNotExist();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        Log.d(TAG, "Alapdíj lekérése: " + dbHelper.getRegAdoAlapdij(1,1,1));
+        /*tv_ElsoForgDatum.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                spn_JarmuTipus.setVisibility(View.VISIBLE);
+            }
+        });*/
     }
 
+    // Fills the spinner with the corresponding data
     private void fillSpinner(Spinner spinner, String[] dataArray) {
         final List<String> dataArrayList = new ArrayList<>(Arrays.asList(dataArray));
         final ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, dataArrayList){
@@ -89,7 +111,12 @@ public class RegKalkMain extends AppCompatActivity implements AdapterView.OnItem
         // Vizsga típusa
         fillSpinner(spn_Vizsga, getResources().getStringArray(R.array.Muszaki));
 
+        // Alapértelmezett események beállítása
         spn_Loketterfogat.setOnItemSelectedListener(this);
+        spn_KornyOszt.setOnItemSelectedListener(this);
+        spn_Vizsga.setOnItemSelectedListener(this);
+
+        btn_Szamol.setOnClickListener(this);
 
     }
 
@@ -101,9 +128,17 @@ public class RegKalkMain extends AppCompatActivity implements AdapterView.OnItem
         spn_Vizsga = (Spinner) findViewById(R.id.spn_Vizsga);
         et_Teljesitmeny = (EditText) findViewById(R.id.et_Teljesitmeny);
         btn_Szamol = (Button) findViewById(R.id.btn_Szamol);
-        tv_ElsoForgDatum = (TextView) findViewById(R.id.tv_ElsoForgDatum);
-    }
+        btn_ElsoForgDatum = (Button) findViewById(R.id.btn_ElsoForgDatum);
 
+        uiElementStateList.add(new UIElementState(R.id.btn_ElsoForgDatum, 0));
+        uiElementStateList.add(new UIElementState(R.id.spn_JarmuTipus, 0));
+        uiElementStateList.add(new UIElementState(R.id.spn_Uzemanyag,0));
+        uiElementStateList.add(new UIElementState(R.id.spn_Loketterfogat,0));
+        uiElementStateList.add(new UIElementState(R.id.spn_KornyOszt,0));
+        uiElementStateList.add(new UIElementState(R.id.spn_Vizsga,0));
+        uiElementStateList.add(new UIElementState(R.id.et_Teljesitmeny,0));
+        uiElementStateList.add(new UIElementState(R.id.btn_Szamol,0));
+    }
 
     // Első forgalombahelyezés datePicker nyitó
     public void showDatePickerDialog(View v) {
@@ -111,10 +146,12 @@ public class RegKalkMain extends AppCompatActivity implements AdapterView.OnItem
         newFragment.show(getSupportFragmentManager(), "ElsoForg");
     }
 
+    // Spinnerek választási eseménye után történő megjelenítések
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         switch (parent.getId()){
             case R.id.spn_JarmuTipus:
+                kalkulacio.setJarmutipus((int)parent.getItemIdAtPosition(position));
                 switch ((int)parent.getItemIdAtPosition(position)) {
                     case 1:
                         // TODO: Személyautó számításához szükséges vizuális elemek kihelyezése
@@ -161,11 +198,42 @@ public class RegKalkMain extends AppCompatActivity implements AdapterView.OnItem
                         break;
                 }
                 break;
+            case R.id.spn_Loketterfogat:
+                kalkulacio.setLoketterforgat((int)parent.getItemIdAtPosition(position));
+                spn_KornyOszt.setVisibility(View.VISIBLE);
+                break;
+
+            case R.id.spn_KornyOszt:
+                kalkulacio.setKornyoszt((int)parent.getItemIdAtPosition(position));
+                break;
         }
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    // Gombokon történő kattintásra történő események vezérlése
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btn_ElsoForgDatum:
+                break;
+            case R.id.btn_Szamol:
+                btn_Szamol();
+                break;
+        }
+    }
+
+    public void btn_Szamol() {
+        if(spn_JarmuTipus.getId() != 0 && spn_Loketterfogat.getId() != 0 && spn_KornyOszt.getId() != 0) {
+            //int alapdij = Integer.parseInt(dbHelper.getRegAdoAlapdij(kalkulacio.getLoketterforgat(), kalkulacio.getJarmutipus(), kalkulacio.getKornyoszt()));
+            List<CsokkentesMerteke> csokkentesMertekeList = dbHelper.getCsokkentesMerteke(136);
+            //Log.d(TAG, Float.toString((float) csokkentesMertekeList.get(0).getCsokkMerteke()));
+            double K;
+            double k;
+
+        }
     }
 }

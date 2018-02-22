@@ -28,6 +28,12 @@ public class AssetDatabaseHelper extends SQLiteOpenHelper {
     private static final String KORNYOSZT = "kornyoszt";
     private static final String ALAPDIJ = "alapdij";
 
+    private static final String CSOKKENTESMERTEKE = "CsokkentesMerteke";
+    private static final String CSMID = "CSMId";
+    private static final String EHMIN = "EHMin";
+    private static final String EHMAX = "EHMax";
+    private static final String CSOKKMERTEKE = "CsokkMerteke";
+
     private String dbName;
     private String db_path;
     private Context context;
@@ -41,7 +47,7 @@ public class AssetDatabaseHelper extends SQLiteOpenHelper {
      *            The name of the db in asset folder .
      */
     public AssetDatabaseHelper(Context context, String dbName) {
-        super(context, dbName, null, 3);
+        super(context, dbName, null, 5);
         this.dbName = dbName;
         this.context = context;
         db_path = "/data/data/" + context.getPackageName() + "/databases/";
@@ -154,6 +160,30 @@ public class AssetDatabaseHelper extends SQLiteOpenHelper {
         }
         return alapdij;
     }
+
+    public List<CsokkentesMerteke> getCsokkentesMerteke(int elteltHonapok) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<CsokkentesMerteke> csokkentesMertekeList = new ArrayList<CsokkentesMerteke>();
+
+        Cursor c=db.rawQuery("SELECT * FROM CSOKKENTESMERTEKE WHERE EHMIN<=" + elteltHonapok + " AND EHMAX >=" + elteltHonapok, null);
+
+        //Cursor c = db.query(CSOKKENTESMERTEKE, new String[]{EHMIN, EHMAX, CSOKKMERTEKE}, EHMIN+"<=? AND " + EHMAX+ ">=?", new String[]{Integer.toString(elteltHonapok), Integer.toString(elteltHonapok)}, null, null, null);
+        try {
+            if (c.moveToFirst()) {
+                do {
+                    csokkentesMertekeList.add(new CsokkentesMerteke(c.getInt(c.getColumnIndex(CSMID)), c.getInt(c.getColumnIndex(EHMIN)), c.getInt(c.getColumnIndex(EHMAX)), c.getFloat(c.getColumnIndex(CSOKKMERTEKE))));
+                } while(c.moveToNext());
+            }
+        } catch (Exception e) {
+            Log.d(TAG, "Hiba a csökkentés mértékének betöltése közben.");
+        } finally {
+            if (c != null && !c.isClosed()) {
+                c.close();
+            }
+        }
+        return csokkentesMertekeList;
+    }
+
 
     public List<String> getall()
     {

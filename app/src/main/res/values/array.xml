@@ -61,4 +61,8 @@
         <item>501-900</item>
         <item>901 felett</item>
     </string-array>
+
+    <string-array name="EredetVizsgaDij">
+        <item></item>
+    </string-array>
 </resources>

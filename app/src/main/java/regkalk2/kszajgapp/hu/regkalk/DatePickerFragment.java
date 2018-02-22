@@ -4,8 +4,10 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -35,10 +37,12 @@ public class DatePickerFragment extends DialogFragment
     }
 
     public void onDateSet(DatePicker view, int year, int month, int day) {
-        TextView tv_ElsoForgDatum = (TextView) getActivity().findViewById(R.id.tv_ElsoForgDatum);
+        TextView btn_ElsoForgDatum = (Button) getActivity().findViewById(R.id.btn_ElsoForgDatum);
+        Spinner spn_JarmuTipus = (Spinner) getActivity().findViewById(R.id.spn_JarmuTipus);
         // Do something with the date chosen by the user
         Locale current = getResources().getConfiguration().locale;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy. MMMM dd.", current);
-        tv_ElsoForgDatum.setText(dateFormat.format(new Date(year-1900, month, day)));
+        btn_ElsoForgDatum.setText(dateFormat.format(new Date(year-1900, month, day)));
+        spn_JarmuTipus.setVisibility(View.VISIBLE);
     }
 }
