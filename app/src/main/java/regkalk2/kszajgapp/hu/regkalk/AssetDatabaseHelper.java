@@ -166,13 +166,19 @@ public class AssetDatabaseHelper extends SQLiteOpenHelper {
         List<CsokkentesMerteke> csokkentesMertekeList = new ArrayList<CsokkentesMerteke>();
 
         Cursor c=db.rawQuery("SELECT * FROM CSOKKENTESMERTEKE WHERE EHMIN<=" + elteltHonapok + " AND EHMAX >=" + elteltHonapok, null);
-
-        //Cursor c = db.query(CSOKKENTESMERTEKE, new String[]{EHMIN, EHMAX, CSOKKMERTEKE}, EHMIN+"<=? AND " + EHMAX+ ">=?", new String[]{Integer.toString(elteltHonapok), Integer.toString(elteltHonapok)}, null, null, null);
         try {
             if (c.moveToFirst()) {
                 do {
                     csokkentesMertekeList.add(new CsokkentesMerteke(c.getInt(c.getColumnIndex(CSMID)), c.getInt(c.getColumnIndex(EHMIN)), c.getInt(c.getColumnIndex(EHMAX)), c.getFloat(c.getColumnIndex(CSOKKMERTEKE))));
                 } while(c.moveToNext());
+            }
+            //int csmid = ((c.getInt(c.getColumnIndex(CSMID)))-1);
+            int csmidc = csokkentesMertekeList.get(0).getId()-1;
+            Cursor d=db.rawQuery("SELECT * FROM CSOKKENTESMERTEKE WHERE CSMId=" + csmidc, null);
+            if (d.moveToFirst()) {
+                do {
+                    csokkentesMertekeList.add(new CsokkentesMerteke(d.getInt(d.getColumnIndex(CSMID)), d.getInt(d.getColumnIndex(EHMIN)), d.getInt(d.getColumnIndex(EHMAX)), d.getFloat(d.getColumnIndex(CSOKKMERTEKE))));
+                } while(d.moveToNext());
             }
         } catch (Exception e) {
             Log.d(TAG, "Hiba a csökkentés mértékének betöltése közben.");
