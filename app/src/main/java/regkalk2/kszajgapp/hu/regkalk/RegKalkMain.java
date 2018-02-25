@@ -1,15 +1,12 @@
 package regkalk2.kszajgapp.hu.regkalk;
 
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +20,13 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.text.SimpleDateFormat;
 
-public class RegKalkMain extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
+public class RegKalkMain extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener, DatePickerFragment.OnDateReceiveCallBack {
 
     private static final String TAG = "RegKalkMain";
 
@@ -227,13 +228,55 @@ public class RegKalkMain extends AppCompatActivity implements AdapterView.OnItem
     }
 
     public void btn_Szamol() {
-        if(spn_JarmuTipus.getId() != 0 && spn_Loketterfogat.getId() != 0 && spn_KornyOszt.getId() != 0) {
-            //int alapdij = Integer.parseInt(dbHelper.getRegAdoAlapdij(kalkulacio.getLoketterforgat(), kalkulacio.getJarmutipus(), kalkulacio.getKornyoszt()));
-            List<CsokkentesMerteke> csokkentesMertekeList = dbHelper.getCsokkentesMerteke(136);
-            //Log.d(TAG, Float.toString((float) csokkentesMertekeList.get(0).getCsokkMerteke()));
-            double K;
-            double k;
+        if(kalkulacio.getJarmutipus() != 0 && kalkulacio.getLoketterforgat() != 0 && kalkulacio.getKornyoszt() != 0) {
+            int F;
+            double K; //Az eltelt hónapok számától eggyel előbbre levő csökkentési érték
+            double k; //Az eltelt hónapok számától függő csökkentési érték
+            int T; //Az adott időszakra vonatkozó hónapok száma (EHMAX-EHMIN)
+            int t; //Eltelt hónapok száma csökkentve K EHMAX értékével
+            int alapdij = Integer.parseInt(dbHelper.getRegAdoAlapdij(kalkulacio.getLoketterforgat(), kalkulacio.getJarmutipus(), kalkulacio.getKornyoszt()));
+            List<CsokkentesMerteke> csokkentesMertekeList = dbHelper.getCsokkentesMerteke(kalkulacio.getElteltHonapok());
+            switch (csokkentesMertekeList.size()){
+                case 0:
+                    //Hibát kell dobni, mert az adatbázisból nem kaptunk értéket
+                    break;
+                case 1:
+                    // 0-2 hónapos autóról van szó
+                    break;
+                case 2:
+                    K = csokkentesMertekeList.get(0).getCsokkMerteke();
+                    k = csokkentesMertekeList.get(1).getCsokkMerteke();
+                    T = csokkentesMertekeList.get(1).getEHMax()- csokkentesMertekeList.get(1).getEHMin();
+                    t = kalkulacio.getElteltHonapok()-csokkentesMertekeList.get(0).getEHMax();
+                    double roundedT = Math.round(((k-K)*t/T*100.0))/100.0;
+                    F = (int) Math.round(alapdij * (1-K-roundedT));
+                    btn_Szamol.setText(Integer.toString(F));
+
+                    Intent intentEredmeny = new Intent(RegKalkMain.this, RegKalkEredmeny.class);
+                    intentEredmeny.putExtra("kalkulacio", kalkulacio);
+                    startActivity(intentEredmeny);
+
+                    break;
+            }
 
         }
+    }
+
+    @Override
+    public void onDateReceive(int dd, int mm, int yy) {
+        final Calendar c = Calendar.getInstance();
+        int today_year = c.get(Calendar.YEAR);
+        int today_month = c.get(Calendar.MONTH);
+        int today_day = c.get(Calendar.DAY_OF_MONTH);
+
+        int diffYear = today_year - yy;
+        int diffMonth = diffYear*12 + today_month - mm;
+
+        Locale current = getResources().getConfiguration().locale;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy. MMMM dd.", current);
+        btn_ElsoForgDatum.setText(dateFormat.format(new Date(yy-1900, mm, dd)));
+        kalkulacio.setElteltHonapok(diffMonth);
+        Log.d(TAG, "Eltelt hónapok: " + Integer.toString(diffMonth));
+        spn_JarmuTipus.setVisibility(View.VISIBLE);
     }
 }
