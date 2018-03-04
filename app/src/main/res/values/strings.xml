@@ -3,4 +3,11 @@
 
     <string name="KornyOszt">Környezetvédelmi osztály</string>
     <string name="Uzemanyag">Üzemanyag</string>
+
+    <string name="ForgalmiEngedelyAr">6000</string>
+    <string name="TorzskonyvAr">6000</string>
+    <string name="RendszamNormalAr">8500</string>
+    <string name="RendszamMotorAr">6500</string>
+    <string name="PlakettAr">850</string>
+
 </resources>

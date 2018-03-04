@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,8 +25,10 @@ public class AssetDatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = "DATABASEHELPER";
 
     private static final String REGADOALAPDIJ = "RegAdoAlap";
-    private static final String LOKETTERFOGAT = "loketterfogat";
     private static final String JARMUTIPUS = "jarmutipus";
+    private static final String LOKETMIN = "loketMin";
+    private static final String LOKETMAX = "loketMax";
+    private static final String UZEMANYAG = "uzemanyag";
     private static final String KORNYOSZT = "kornyoszt";
     private static final String ALAPDIJ = "alapdij";
 
@@ -34,6 +38,15 @@ public class AssetDatabaseHelper extends SQLiteOpenHelper {
     private static final String EHMAX = "EHMax";
     private static final String CSOKKMERTEKE = "CsokkMerteke";
 
+    private static final String VAGYONSZERZESIILLETEK = "VagyonszerzesiIlletek";
+    private static final String TELJMIN = "TeljMin";
+    private static final String TELJMAX = "TeljMax";
+    private static final String EVMIN = "EvMin";
+    private static final String EVMAX = "EvMax";
+    private static final String TELJAR = "TeljAr";
+
+
+    private static final int VERSION = 8;
     private String dbName;
     private String db_path;
     private Context context;
@@ -47,7 +60,7 @@ public class AssetDatabaseHelper extends SQLiteOpenHelper {
      *            The name of the db in asset folder .
      */
     public AssetDatabaseHelper(Context context, String dbName) {
-        super(context, dbName, null, 5);
+        super(context, dbName, null, VERSION);
         this.dbName = dbName;
         this.context = context;
         db_path = "/data/data/" + context.getPackageName() + "/databases/";
@@ -90,28 +103,38 @@ public class AssetDatabaseHelper extends SQLiteOpenHelper {
      * database.
      * */
     public void importIfNotExist() throws IOException {
-
+        int dbVersion = 0;
+        String myPath = db_path + dbName;
+        SQLiteDatabase checkDB = null;
         boolean dbExist = checkExist();
 
-        if (dbExist) {
+
+        if(dbExist) {
+            dbVersion = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY).getVersion();
+        }
+
+
+
+        if (!dbExist || dbVersion<VERSION) {
             // do nothing - database already exist
+            if(dbVersion<VERSION) {
+                SQLiteDatabase.deleteDatabase(new File(myPath));
+            }
+
+            this.getReadableDatabase();
+            try {
+                copyDatabase();
+            } catch (IOException e) {
+                throw new Error("Error copying database");
+            }
+
         } else {
 
             // By calling this method and empty database will be created into
             // the default system path
             // of your application so we are gonna be able to overwrite that
             // database with our database.
-            this.getReadableDatabase();
 
-            try {
-
-                copyDatabase();
-
-            } catch (IOException e) {
-
-                throw new Error("Error copying database");
-
-            }
         }
 
     }
@@ -138,13 +161,14 @@ public class AssetDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
     }
 
-    public String getRegAdoAlapdij(int loketterfogat, int jarmutipus, int kornyoszt)
+    public String getRegAdoAlapdij(int jarmutipus, int loketterfogat, int uzemanyag, int kornyoszt)
     {
         SQLiteDatabase db = this.getReadableDatabase();
         String alapdij = "";
-        Cursor c = db.query(REGADOALAPDIJ, new String[]{ALAPDIJ}, LOKETTERFOGAT+"=? AND " + JARMUTIPUS + "=? AND " + KORNYOSZT + "=?", new String[]{Integer.toString(loketterfogat), Integer.toString(jarmutipus), Integer.toString(kornyoszt)}, null, null, null);
+        Cursor c = db.query(REGADOALAPDIJ, new String[]{ALAPDIJ}, LOKETMIN+"<=? AND " + LOKETMAX + ">=? AND " + UZEMANYAG + "=? AND " + JARMUTIPUS + "=? AND " + KORNYOSZT + "=?", new String[]{Integer.toString(loketterfogat), Integer.toString(loketterfogat),Integer.toString(uzemanyag), Integer.toString(jarmutipus), Integer.toString(kornyoszt)}, null, null, null);
         try {
             if (c.moveToFirst()) {
                 do {
@@ -181,6 +205,27 @@ public class AssetDatabaseHelper extends SQLiteOpenHelper {
             }
         }
         return csokkentesMertekeList;
+    }
+
+    public int getVagyonszerzesiIlletekAlap(int elteltEvek, int teljesitmeny) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        int vialap = 0;
+
+        Cursor c = db.rawQuery("select "+TELJAR+" from "+VAGYONSZERZESIILLETEK+" where ("+EVMIN+"<="+elteltEvek+" AND "+EVMAX+">=" +elteltEvek+ ") AND ("+TELJMIN+"<=" +teljesitmeny+ " AND "+TELJMAX+">=" + teljesitmeny+ ")", null);
+        try {
+            if (c.moveToFirst()) {
+                do {
+                    vialap = c.getInt(c.getColumnIndex(TELJAR));
+                } while(c.moveToNext());
+            }
+        } catch (Exception e) {
+            Log.d(TAG, "Hiba a vagyonszerzési illeték betöltése közben.");
+        } finally {
+            if (c != null && !c.isClosed()) {
+                c.close();
+            }
+        }
+        return vialap;
     }
 
 

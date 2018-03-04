@@ -6,48 +6,173 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
 tools:context="regkalk2.kszajgapp.hu.regkalk.RegKalkEredmeny">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/background" />
+
     <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:padding="10dp">
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent"
+            android:background="@drawable/eredemeny_tablerow_background"
+            android:layout_marginBottom="3dp">
 
             <TextView
                 android:id="@+id/tv_Jarmutipus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                style="@style/EredemenyText"
-                android:text="Jármű típus:" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Jármű típus:"
+                style="@style/EredemenyText" />
 
             <TextView
                 android:id="@+id/tv_JarmutipusErtek"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                style="@style/EredemenyText" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tr_Uzemanyag"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/eredemeny_tablerow_background"
+            android:layout_marginBottom="3dp">
+
+            <TextView
+                android:id="@+id/tv_Uzemanyagtipus"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Jármű típus:"
+                style="@style/EredemenyText" />
+
+            <TextView
+                android:id="@+id/tv_UzemanyagtipusErtek"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 style="@style/EredemenyText" />
         </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:background="@drawable/eredemeny_tablerow_background"
+            android:layout_marginBottom="3dp">
+
+            <TextView
+                android:id="@+id/tv_RegisztraciosAdo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Regisztrációs adó:"
+                style="@style/EredemenyText" />
+
+            <TextView
+                android:id="@+id/tv_RegisztraciosAdoErtek"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                style="@style/EredemenyText" />
+        </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:background="@drawable/eredemeny_tablerow_background"
+            android:layout_marginBottom="3dp">
+
+            <TextView
+                android:id="@+id/tv_VagyonszerzesiIlletek"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Vagyonszerzési illeték:"
+                style="@style/EredemenyText" />
+
+            <TextView
+                android:id="@+id/tv_VagyonszerzesiIlletekErtek"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                style="@style/EredemenyText" />
+        </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:background="@drawable/eredemeny_tablerow_background"
+            android:layout_marginBottom="3dp">
+
+            <TextView
+                android:id="@+id/tv_ForgalmiEngedely"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Forgalmi engedély:"
+                style="@style/EredemenyText" />
+
+            <TextView
+                android:id="@+id/tv_ForgalmiEngedelyErtek"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                style="@style/EredemenyText" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/eredemeny_tablerow_background"
+            android:layout_marginBottom="3dp">
+
+            <TextView
+                android:id="@+id/tv_Torzskonyv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Törzskönyv:"
+                style="@style/EredemenyText" />
+
+            <TextView
+                android:id="@+id/tv_TorzskonyvErtek"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                style="@style/EredemenyText" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/eredemeny_tablerow_background"
+            android:layout_marginBottom="3dp">
+
+            <TextView
+                android:id="@+id/tv_Rendszam"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Rendszám:"
+                style="@style/EredemenyText" />
+
+            <TextView
+                android:id="@+id/tv_RendszamErtek"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                style="@style/EredemenyText" />
+        </TableRow>
+
     </TableLayout>
-
-    <ImageView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:scaleType="centerCrop"
-    android:src="@drawable/background" />
 
 <!--<ListView
     android:id="@+id/lv_Eredmeny"

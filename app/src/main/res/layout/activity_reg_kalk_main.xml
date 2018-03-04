@@ -9,8 +9,9 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
+        android:contentDescription="background"
 
+        android:scaleType="centerCrop"
         android:src="@drawable/background" />
 
 
@@ -23,10 +24,12 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="30dp"
             android:layout_marginStart="30dp"
             android:background="@drawable/transparent_background"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:orientation="vertical">
 
             <Button
@@ -38,78 +41,93 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/input_background"
                 android:onClick="showDatePickerDialog"
+                android:paddingLeft="10dp"
                 android:text="Első forgalombahelyezés időpontja"
                 android:textAlignment="textStart"
-                android:paddingLeft="10dp"
                 android:textAllCaps="false"
-                android:textSize="16dp"/>
+                android:textSize="16dp" />
 
             <Spinner
                 android:id="@+id/spn_JarmuTipus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:background="@drawable/input_background"
-                android:layout_marginStart="15dp"
+                android:layout_marginBottom="10dp"
                 android:layout_marginEnd="15dp"
+                android:layout_marginStart="15dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"/>
+                android:background="@drawable/input_background"
+                android:visibility="gone" />
 
             <Spinner
                 android:id="@+id/spn_Uzemanyag"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:background="@drawable/input_background"
-                android:layout_marginStart="15dp"
+                android:layout_marginBottom="10dp"
                 android:layout_marginEnd="15dp"
-                android:layout_marginBottom="10dp"/>
+                android:layout_marginStart="15dp"
+                android:background="@drawable/input_background"
+                android:visibility="gone" />
 
             <Spinner
                 android:id="@+id/spn_KornyOszt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:prompt="@string/KornyOszt"
-                android:background="@drawable/input_background"
-                android:layout_marginStart="15dp"
+                android:layout_marginBottom="10dp"
                 android:layout_marginEnd="15dp"
-                android:layout_marginBottom="10dp"/>
+                android:layout_marginStart="15dp"
+                android:background="@drawable/input_background"
+                android:prompt="@string/KornyOszt"
+                android:visibility="gone" />
 
-            <Spinner
+            <!-- <Spinner
                 android:id="@+id/spn_Loketterfogat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/input_background"
-                android:layout_marginStart="15dp"
+                android:layout_marginBottom="10dp"
                 android:layout_marginEnd="15dp"
-                android:layout_marginBottom="10dp"/>
+                android:layout_marginStart="15dp"
+                android:background="@drawable/input_background" />-->
+
+            <EditText
+                android:id="@+id/et_Loketterfogat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginStart="15dp"
+                android:background="@drawable/input_background"
+                android:hint="Lökettérfogat megadása"
+                android:inputType="numberDecimal"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp"
+                android:textColorHint="#090909"
+                android:textSize="16sp" />
 
             <EditText
                 android:id="@+id/et_Teljesitmeny"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginStart="15dp"
+                android:background="@drawable/input_background"
                 android:hint="Teljesítmény (kW)"
                 android:inputType="numberDecimal"
-                android:focusable="false"
-                android:background="@drawable/input_background"
-                android:textColorHint="#090909"
-                android:textSize="16sp"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginBottom="10dp"
-                android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:paddingLeft="10dp"/>
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp"
+                android:textColorHint="#090909"
+                android:textSize="16sp" />
 
             <Spinner
                 android:id="@+id/spn_Vizsga"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/input_background"
-                android:layout_marginStart="15dp"
+                android:layout_marginBottom="10dp"
                 android:layout_marginEnd="15dp"
-                android:layout_marginBottom="10dp"/>
+                android:layout_marginStart="15dp"
+                android:background="@drawable/input_background" />
 
             <Button
                 android:id="@+id/btn_Szamol"
@@ -121,6 +139,23 @@
 
         </LinearLayout>
 
-
     </ScrollView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.gms.ads.AdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            ads:adSize="BANNER"
+            ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
+        </com.google.android.gms.ads.AdView>
+
+    </RelativeLayout>
+
 </RelativeLayout>
