@@ -63,6 +63,29 @@ tools:context="regkalk2.kszajgapp.hu.regkalk.RegKalkEredmeny">
         </TableRow>
 
         <TableRow
+            android:id="@+id/tr_MuszakiVizsga"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/eredemeny_tablerow_background"
+            android:layout_marginBottom="3dp">
+
+            <TextView
+                android:id="@+id/tv_MuszakiVizsga"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Műszaki vizsga:"
+                style="@style/EredemenyText" />
+
+            <TextView
+                android:id="@+id/tv_MuszakiVizsgaErtek"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                style="@style/EredemenyText" />
+        </TableRow>
+
+        <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/eredemeny_tablerow_background"
@@ -85,6 +108,7 @@ tools:context="regkalk2.kszajgapp.hu.regkalk.RegKalkEredmeny">
         </TableRow>
 
         <TableRow
+            android:id="@+id/tr_VagyonszerzesiIlletek"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/eredemeny_tablerow_background"
@@ -100,6 +124,29 @@ tools:context="regkalk2.kszajgapp.hu.regkalk.RegKalkEredmeny">
 
             <TextView
                 android:id="@+id/tv_VagyonszerzesiIlletekErtek"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                style="@style/EredemenyText" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tr_EredetVizsgaDij"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/eredemeny_tablerow_background"
+            android:layout_marginBottom="3dp">
+
+            <TextView
+                android:id="@+id/tv_EredetVizsgaDij"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Eredetvizsga díja:"
+                style="@style/EredemenyText" />
+
+            <TextView
+                android:id="@+id/tv_EredetVizsgaDijErtek"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"

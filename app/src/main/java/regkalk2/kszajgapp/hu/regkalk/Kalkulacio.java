@@ -16,6 +16,7 @@ import static java.sql.Types.NULL;
 public class Kalkulacio implements Parcelable{
 
     // Osztály tagjai
+    private String elso_forg;
     private int loketterforgat;
     private String loketterfogatnev;
     private int jarmutipus;
@@ -29,7 +30,10 @@ public class Kalkulacio implements Parcelable{
     private int teljesitmeny;
     private int regado;
     private int vagyonszerzesiIlletek;
-    private String ervenyesMuszaki;
+    private int eredetVizsgaDij;
+    private int ervenyesMuszaki;
+    private int osszkerek;
+    private int kisteher;
     private Context context;
 
     private int reward;
@@ -60,6 +64,7 @@ public class Kalkulacio implements Parcelable{
     }
 
     public Kalkulacio (Parcel parcel) {
+        this.elso_forg = parcel.readString();
         this.loketterforgat = parcel.readInt();
         this.jarmutipus = parcel.readInt();
         this.kornyoszt = parcel.readInt();
@@ -68,6 +73,17 @@ public class Kalkulacio implements Parcelable{
         this.uzemanyagnev = parcel.readString();
         this.regado = parcel.readInt();
         this.vagyonszerzesiIlletek = parcel.readInt();
+        this.eredetVizsgaDij = parcel.readInt();
+        this.osszkerek = parcel.readInt();
+        this.kisteher = parcel.readInt();
+    }
+
+    public String getElso_forg() {
+        return elso_forg;
+    }
+
+    public void setElso_forg(String elso_forg) {
+        this.elso_forg = elso_forg;
     }
 
     public int getLoketterforgat() {
@@ -166,6 +182,14 @@ public class Kalkulacio implements Parcelable{
         this.vagyonszerzesiIlletek = vagyonszerzesiIlletek;
     }
 
+    public int getEredetVizsgaDij() {
+        return eredetVizsgaDij;
+    }
+
+    public void setEredetVizsgaDij(int eredetVizsgaDij) {
+        this.eredetVizsgaDij = eredetVizsgaDij;
+    }
+
     public int getTeljesitmeny() {
         return teljesitmeny;
     }
@@ -174,12 +198,28 @@ public class Kalkulacio implements Parcelable{
         this.teljesitmeny = teljesitmeny;
     }
 
-    public String getErvenyesMuszaki() {
+    public int getErvenyesMuszaki() {
         return ervenyesMuszaki;
     }
 
-    public void setErvenyesMuszaki(String ervenyesMuszaki) {
+    public void setErvenyesMuszaki(int ervenyesMuszaki) {
         this.ervenyesMuszaki = ervenyesMuszaki;
+    }
+
+    public int getOsszkerek() {
+        return osszkerek;
+    }
+
+    public void setOsszkerek(int osszkerek) {
+        this.osszkerek = osszkerek;
+    }
+
+    public int getKisteher() {
+        return kisteher;
+    }
+
+    public void setKisteher(int kisteher) {
+        this.kisteher = kisteher;
     }
 
     public Context getContext() {
@@ -205,6 +245,7 @@ public class Kalkulacio implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.elso_forg);
         dest.writeInt(this.loketterforgat);
         dest.writeInt(this.jarmutipus);
         dest.writeInt(this.kornyoszt);
@@ -213,6 +254,9 @@ public class Kalkulacio implements Parcelable{
         dest.writeString(this.uzemanyagnev);
         dest.writeInt(this.regado);
         dest.writeInt(this.vagyonszerzesiIlletek);
+        dest.writeInt(this.eredetVizsgaDij);
+        dest.writeInt(this.osszkerek);
+        dest.writeInt(this.kisteher);
     }
 
     //public int getRegAdoAlapdij(int loketterforgat, int jarmutipus, int kornyoszt) {
@@ -237,7 +281,18 @@ public class Kalkulacio implements Parcelable{
         int T; //Az adott időszakra vonatkozó hónapok száma (EHMAX-EHMIN)
         int t; //Eltelt hónapok száma csökkentve K EHMAX értékével
 
-        // helyett a Kalkulacio osztályban int alapdij = Integer.parseInt(dbHelper.getRegAdoAlapdij(kalkulacio.getLoketterforgat(), kalkulacio.getJarmutipus(), kalkulacio.getKornyoszt()));
+        switch (uzemanyag) {
+            // TODO: Üzemanyag típusától függő vizsgadíj számítása és hozzáadása
+            case 1: // Benzin
+                break;
+            case 2: //Dízel
+                break;
+            case 3: // Hibrid
+                break;
+            case 4: // Elektromos / Plug-In hybrid
+                break;
+        }
+
         switch (csokkentesMertekeList.size()){
             case 0:
                 //Hibát kell dobni, mert az adatbázisból nem kaptunk értéket
@@ -268,14 +323,55 @@ public class Kalkulacio implements Parcelable{
     public int getEredetVizsgaDij(int jarmutipus, int loketterforgat) {
         switch (jarmutipus){
             case 1: //ha személyautó
-
+                if (0<=loketterforgat && loketterforgat<=1400) {
+                    return Constants.EREDET_B1;
+                }
+                else if (1401<=loketterforgat && loketterforgat<=2000) {
+                    return Constants.EREDET_B2;
+                }
+                else if (2001<=loketterforgat) {
+                    return Constants.EREDET_B3;
+                }
                 break;
             case 2: //ha motor
-
+                if (0<=loketterforgat && 500<=loketterforgat) {
+                    return Constants.EREDET_A1;
+                }
+                else if (501<=loketterforgat) {
+                    return Constants.EREDET_A2;
+                }
                 break;
             case 3: //ha teherautó
 
                 break;
+        }
+        return 0;
+    }
+
+    public int getMuszakiVizsgaDij (int jarmutipus, int vizsga, int ervenyesMuszaki, int kisteher, int osszkerek) {
+        int vizsgadij = 0;
+        if (jarmutipus == 1) {
+            if (ervenyesMuszaki == 1) {
+                vizsgadij = vizsgadij + 8000;
+            }
+            else {
+                vizsgadij = vizsgadij + 22800 + 16290;
+            }
+            if (osszkerek == 1) {
+                vizsgadij = vizsgadij + 4100;
+            }
+            if (kisteher == 1) {
+                vizsgadij = vizsgadij + 800;
+            }
+        }
+        else if (jarmutipus == 2){
+            // TODO: A motoros rész nem biztos, hogy így kell, hogy működjön, ellenőrizni!
+            if (ervenyesMuszaki == 1) {
+                vizsgadij = vizsgadij + 4350;
+            }
+            else {
+                vizsgadij = vizsgadij + 4350 + 22800;
+            }
         }
         return 0;
     }

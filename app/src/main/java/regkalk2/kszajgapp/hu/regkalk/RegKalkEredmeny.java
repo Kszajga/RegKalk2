@@ -32,8 +32,13 @@ public class RegKalkEredmeny extends AppCompatActivity {
         TextView tv_RegisztraciosAdo = (TextView) findViewById(R.id.tv_RegisztraciosAdo);
         TextView tv_RegisztraciosAdoErtek = (TextView) findViewById(R.id.tv_RegisztraciosAdoErtek);
 
+        TableRow tr_VagyonszerzesiIlletek = (TableRow) findViewById(R.id.tr_VagyonszerzesiIlletek);
         TextView tv_VagyonszerzesiIlletek = (TextView) findViewById(R.id.tv_VagyonszerzesiIlletek);
         TextView tv_VagyonszerzesiIlletekErtek = (TextView) findViewById(R.id.tv_VagyonszerzesiIlletekErtek);
+
+        TableRow tr_EredetVizsgaDij = (TableRow) findViewById(R.id.tr_EredetVizsgaDij);
+        TextView tv_EredetVizsgaDij = (TextView) findViewById(R.id.tv_EredetVizsgaDij);
+        TextView tv_EredetVizsgaDijErtek = (TextView) findViewById(R.id.tv_EredetVizsgaDijErtek);
 
         TextView tv_ForgalmiEngedely = (TextView) findViewById(R.id.tv_ForgalmiEngedely);
         TextView tv_ForgalmiEngedelyErtek = (TextView) findViewById(R.id.tv_ForgalmiEngedelyErtek);
@@ -54,11 +59,17 @@ public class RegKalkEredmeny extends AppCompatActivity {
         tv_RegisztraciosAdoErtek.setText(Integer.toString(kalkulacio.getRegado()) + " Ft");
 
         if (kalkulacio.getVagyonszerzesiIlletek() == 0) {
-            tv_VagyonszerzesiIlletek.setVisibility(View.GONE);
-            tv_VagyonszerzesiIlletekErtek.setVisibility(View.GONE);
+            tr_VagyonszerzesiIlletek.setVisibility(View.GONE);
         }
         else {
             tv_VagyonszerzesiIlletekErtek.setText(Integer.toString(kalkulacio.getVagyonszerzesiIlletek()) + " Ft");
+        }
+
+        if (kalkulacio.getEredetVizsgaDij() == 0) {
+            tr_EredetVizsgaDij.setVisibility(View.GONE);
+        }
+        else {
+            tv_EredetVizsgaDijErtek.setText(Integer.toString(kalkulacio.getEredetVizsgaDij()) + " Ft");
         }
 
         tv_ForgalmiEngedelyErtek.setText(Integer.toString(Constants.FORGALMI) + " Ft");

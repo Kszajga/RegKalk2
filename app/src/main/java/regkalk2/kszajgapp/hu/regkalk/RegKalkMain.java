@@ -1,7 +1,10 @@
 package regkalk2.kszajgapp.hu.regkalk;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -11,11 +14,16 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -41,9 +49,10 @@ public class RegKalkMain extends AppCompatActivity implements AdapterView.OnItem
 
     private static final String TAG = "RegKalkMain";
 
-    public Spinner spn_JarmuTipus, spn_KornyOszt, spn_Uzemanyag, spn_Vizsga; // törölve: spn_Loketterfogat
-    private EditText et_Loketterfogat, et_Teljesitmeny;
-    private Button btn_Szamol, btn_ElsoForgDatum;
+    private Spinner spn_JarmuTipus, spn_KornyOszt, spn_Uzemanyag, spn_Vizsga; // törölve: spn_Loketterfogat
+    private EditText et_Loketterfogat, et_Teljesitmeny, et_ElsoForgDatum;
+    private Button btn_Szamol;
+    private CheckBox cb_Osszkerek, cb_Kisteher;
     private AssetDatabaseHelper dbHelper;
 
     // For AdMob
@@ -55,14 +64,23 @@ public class RegKalkMain extends AppCompatActivity implements AdapterView.OnItem
 
     public Kalkulacio kalkulacio = new Kalkulacio();
 
+    InputMethodManager imm;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         setContentView(R.layout.activity_reg_kalk_main);
         MobileAds.initialize(this, "ca-app-pub-3940256099942544~3347511713");
 
+        if (savedInstanceState != null) {
+            kalkulacio = savedInstanceState.getParcelable("kalkulacio");
+        }
+
         initUI();
+        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(et_ElsoForgDatum.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 
         uploadDefaultItems();
 
@@ -76,6 +94,19 @@ public class RegKalkMain extends AppCompatActivity implements AdapterView.OnItem
         rewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
         rewardedVideoAd.setRewardedVideoAdListener(this);
         loadRewardedVideoAd();
+
+
+
+        // SoftKey elrejtése, ha EditTexten kívülre kattintunk.
+        // Ha ez be van kapcsolva a scrollView-n, akkor nem scrollozható xD
+        findViewById(R.id.scrollView).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                return true;
+            }
+        });
 
         // Adatbázis inicializálása
         dbHelper = new AssetDatabaseHelper(getBaseContext(), "regkalk.db");
@@ -110,6 +141,11 @@ public class RegKalkMain extends AppCompatActivity implements AdapterView.OnItem
     }
 
     private void uploadDefaultItems() {
+        // Dátum dialog nyitó
+        et_ElsoForgDatum.setOnClickListener(this);
+        et_ElsoForgDatum.setFocusable(false);
+        //et_ElsoForgDatum.setFocusableInTouchMode(f);
+
         // Jármű típusainak beállítása
         fillSpinner(spn_JarmuTipus, getResources().getStringArray(R.array.JarmuTipus));
         spn_JarmuTipus.setOnItemSelectedListener(this);
@@ -137,7 +173,9 @@ public class RegKalkMain extends AppCompatActivity implements AdapterView.OnItem
                 //Toast.makeText(getBaseContext(), "on Text Changed.", Toast.LENGTH_SHORT).show();
                 if(s.length() > 0){
                     kalkulacio.setLoketterforgat(Integer.parseInt(et_Loketterfogat.getText().toString()));
-                    Toast.makeText(getBaseContext(), "after Text Changed.", Toast.LENGTH_SHORT).show();
+
+                    // Teljesítmény minden esetben megadható
+                    et_Teljesitmeny.setVisibility(View.VISIBLE);
 
                     // Motor esetén nincs környezetvédelmi osztály
                     if(kalkulacio.getJarmutipus() !=2){
@@ -161,19 +199,23 @@ public class RegKalkMain extends AppCompatActivity implements AdapterView.OnItem
 
         btn_Szamol.setOnClickListener(this);
 
+        cb_Osszkerek.setOnClickListener(this);
+        cb_Kisteher.setOnClickListener(this);
+
     }
 
     public void initUI() {
         adView = (AdView) findViewById(R.id.adView);
+        et_ElsoForgDatum = (EditText) findViewById(R.id.et_ElsoForgDatum);
         spn_JarmuTipus = (Spinner) findViewById(R.id.spn_JarmuTipus);
         spn_KornyOszt = (Spinner) findViewById(R.id.spn_KornyOszt);
         spn_Uzemanyag = (Spinner) findViewById(R.id.spn_Uzemanyag);
-        //spn_Loketterfogat = (Spinner) findViewById(R.id.spn_Loketterfogat); törölve
         spn_Vizsga = (Spinner) findViewById(R.id.spn_Vizsga);
         et_Loketterfogat = (EditText) findViewById(R.id.et_Loketterfogat);
         et_Teljesitmeny = (EditText) findViewById(R.id.et_Teljesitmeny);
+        cb_Kisteher = (CheckBox) findViewById(R.id.cb_Kisteher);
+        cb_Osszkerek = (CheckBox) findViewById(R.id.cb_Osszkerek);
         btn_Szamol = (Button) findViewById(R.id.btn_Szamol);
-        btn_ElsoForgDatum = (Button) findViewById(R.id.btn_ElsoForgDatum);
     }
 
     // Első forgalombahelyezés datePicker nyitó
@@ -202,7 +244,7 @@ public class RegKalkMain extends AppCompatActivity implements AdapterView.OnItem
                         kalkulacio.setJarmutipusnev("Motor");
                         spn_Uzemanyag.setVisibility(View.GONE);
                         spn_KornyOszt.setVisibility(View.GONE);
-
+                        et_Loketterfogat.setVisibility(View.VISIBLE);
                         /*fillSpinner(spn_Loketterfogat, getResources().getStringArray(R.array.MotorLoketterfogat)); törölve
                         spn_Loketterfogat.setVisibility(View.VISIBLE);*/
                         break;
@@ -221,51 +263,37 @@ public class RegKalkMain extends AppCompatActivity implements AdapterView.OnItem
                         // TODO: Benzin számításához szükséges vizuális elemek kihelyezése
                         Log.d(TAG, "Benzin");
                         kalkulacio.setUzemanyagnev("Benzin");
-                        // Olyan kellene, hogy ShowNextStep()
-                        /*fillSpinner(spn_Loketterfogat, getResources().getStringArray(R.array.BenzinLoketterfogat)); törölve
-                        spn_Loketterfogat.setVisibility(View.VISIBLE);*/
                         et_Loketterfogat.setVisibility(View.VISIBLE);
+                        spn_KornyOszt.setVisibility(View.VISIBLE);
                         break;
                     case 2:
                         // TODO: Gázolaj számításához szükséges vizuális elemek kihelyezése
                         Log.d(TAG, "Gázolaj");
                         kalkulacio.setUzemanyagnev("Gázolaj");
-                        /*fillSpinner(spn_Loketterfogat, getResources().getStringArray(R.array.GazolajLoketterfogat)); törölve
-                        spn_Loketterfogat.setVisibility(View.VISIBLE);*/
                         et_Loketterfogat.setVisibility(View.VISIBLE);
                         break;
                     case 3:
                         // TODO: Hibrid számításához szükséges vizuális elemek kihelyezése
                         Log.d(TAG, "Hibrid");
                         kalkulacio.setUzemanyagnev("Hibrid");
-                        //spn_Loketterfogat.setVisibility(View.GONE); törölve
                         et_Loketterfogat.setVisibility(View.GONE);
                         break;
                     case 4:
                         // TODO: Elektromos / Plug-In Hybrid számításához szükséges vizuális elemek kihelyezése
                         Log.d(TAG, "Elektromos / Plug-In Hybrid");
                         kalkulacio.setUzemanyagnev("Elektromos / Plug-In Hybrid");
-                        //spn_Loketterfogat.setVisibility(View.GONE); törölve
                         et_Loketterfogat.setVisibility(View.GONE);
                         break;
                 }
                 break;
-            /*case R.id.spn_Loketterfogat:
-                kalkulacio.setLoketterforgat((int)parent.getItemIdAtPosition(position));
-                if(kalkulacio.getJarmutipus() == 2) { //ha motor
-                    spn_KornyOszt.setVisibility(View.GONE);
-                }
-                else if (kalkulacio.getJarmutipus() != 2) {
-                    spn_KornyOszt.setVisibility(View.VISIBLE);
-                }
-                break;*/
 
             case R.id.spn_KornyOszt:
                 kalkulacio.setKornyoszt((int)parent.getItemIdAtPosition(position));
                 break;
 
             case R.id.spn_Vizsga:
-                kalkulacio.setErvenyesMuszaki(String.valueOf(parent.getItemIdAtPosition(position)));
+                //kalkulacio.setErvenyesMuszaki(String.valueOf(parent.getItemIdAtPosition(position)));
+                kalkulacio.setErvenyesMuszaki(parent.getSelectedItemPosition());  // 1 = Igen, 2 = Nem
                 break;
         }
     }
@@ -278,13 +306,22 @@ public class RegKalkMain extends AppCompatActivity implements AdapterView.OnItem
     // Gombokon történő kattintásra történő események vezérlése
     @Override
     public void onClick(View v) {
+        boolean checked = false;
+        checked = ((CheckBox) v).isChecked();
         switch (v.getId()){
-            case R.id.btn_ElsoForgDatum:
+            case R.id.et_ElsoForgDatum:
+                showDatePickerDialog(v);
                 break;
             case R.id.btn_Szamol:
                 if (rewardedVideoAd.isLoaded()) {
                     rewardedVideoAd.show();
                 }
+                break;
+            case R.id.cb_Kisteher:
+                if (checked) kalkulacio.setKisteher(1);
+                break;
+            case R.id.cb_Osszkerek:
+                if (checked) kalkulacio.setOsszkerek(1);
                 break;
         }
     }
@@ -293,6 +330,9 @@ public class RegKalkMain extends AppCompatActivity implements AdapterView.OnItem
         if(kalkulacio.getJarmutipus() != 0 && kalkulacio.getLoketterforgat() > 0) {
             int F = kalkulacio.getRegAdo();
             kalkulacio.setRegado(F);
+
+            int eredetvizsga = kalkulacio.getEredetVizsgaDij(kalkulacio.getJarmutipus(), kalkulacio.getLoketterforgat());
+            kalkulacio.setEredetVizsgaDij(eredetvizsga);
 
             // Teljesítmény beállítása 0-ra, így nem lesz hiba, nem írnak be semmit.
             kalkulacio.setTeljesitmeny(0);
@@ -320,7 +360,9 @@ public class RegKalkMain extends AppCompatActivity implements AdapterView.OnItem
 
         Locale current = getResources().getConfiguration().locale;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy. MMMM dd.", current);
-        btn_ElsoForgDatum.setText(dateFormat.format(new Date(yy-1900, mm, dd)));
+        //btn_ElsoForgDatum.setText(dateFormat.format(new Date(yy-1900, mm, dd)));
+        et_ElsoForgDatum.setText(dateFormat.format(new Date(yy-1900, mm, dd)));
+        kalkulacio.setElso_forg(dateFormat.format(new Date(yy-1900, mm, dd)));
         kalkulacio.setElteltHonapok(diffMonth);
         kalkulacio.setElteltEvek(diffYear);
         Log.d(TAG, "Eltelt hónapok: " + Integer.toString(diffMonth));
@@ -383,5 +425,31 @@ public class RegKalkMain extends AppCompatActivity implements AdapterView.OnItem
     @Override
     public void onRewardedVideoAdFailedToLoad(int i) {
         Toast.makeText(getBaseContext(), "Ad failed to load.", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable("kalkulacio", kalkulacio);
+        super.onSaveInstanceState(outState);
+        Log.d(TAG, "onSaveInstanceState");
+
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Log.d(TAG, "onRestoreInstanceState");
+        savedInstanceState.getParcelable("kalkulacio");
+        btn_Szamol.setText(kalkulacio.getElso_forg());
     }
 }

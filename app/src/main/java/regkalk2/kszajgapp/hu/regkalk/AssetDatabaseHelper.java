@@ -78,7 +78,7 @@ public class AssetDatabaseHelper extends SQLiteOpenHelper {
 
         try {
             String myPath = db_path + dbName;
-            checkDB = SQLiteDatabase.openDatabase(myPath, null,
+            checkDB = SQLiteDatabase.openDatabase(db_path, null,
                     SQLiteDatabase.OPEN_READONLY);
 
         } catch (SQLiteException e) {

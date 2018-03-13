@@ -8,7 +8,7 @@ public class Constants {
     public static final int TORZSKONYV = 6000;
     public static final int FORGALMI = 6000;
     public static final int RENDSZAM = 8500;
-    public static final int RENDSZAMMOTOR = 6500;
+    public static final int RENDSZAMMOTOR = 5500;
 
     public static final int EREDET_B1 = 17000; //1400 ccm-ig
     public static final int EREDET_B2 = 18500; //2000 ccm-ig

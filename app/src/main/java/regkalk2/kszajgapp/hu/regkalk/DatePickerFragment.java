@@ -4,7 +4,9 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.net.ParseException;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.widget.Button;
@@ -47,40 +49,38 @@ public class DatePickerFragment extends DialogFragment
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-
         final Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
-
-        // Create a new instance of DatePickerDialog and return it
-        return new DatePickerDialog(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT, this, year, month, day);
+        Dialog retval = null;
+        if(savedInstanceState == null) {
+            // Create a new instance of DatePickerDialog and return it
+            retval = new DatePickerDialog(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT, this, year, month, day);
+        }
+        else {
+            Kalkulacio kalkulacio = savedInstanceState.getParcelable("kalkulacio");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy. MMMM dd.");
+            try {
+                Date date = format.parse(kalkulacio.getElso_forg().toString());
+                retval = new DatePickerDialog(context, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT, this, date.getYear(), date.getMonth(), date.getDay());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            } catch (java.text.ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return retval;
     }
-
-    /*@Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        // Use the current date as the default date in the picker
-        final Calendar c = Calendar.getInstance();
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int day = c.get(Calendar.DAY_OF_MONTH);
-
-        // Create a new instance of DatePickerDialog and return it
-        return new DatePickerDialog(getActivity(), this, year, month, day);
-    }*/
 
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         mListener.onDateReceive(dayOfMonth,monthOfYear,year);
     }
 
-    /*public void onDateSet(DatePicker view, int year, int month, int day) {
-        TextView btn_ElsoForgDatum = (Button) getActivity().findViewById(R.id.btn_ElsoForgDatum);
-        Spinner spn_JarmuTipus = (Spinner) getActivity().findViewById(R.id.spn_JarmuTipus);
-        // Do something with the date chosen by the user
-        Locale current = getResources().getConfiguration().locale;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy. MMMM dd.", current);
-        btn_ElsoForgDatum.setText(dateFormat.format(new Date(year-1900, month, day)));
-        spn_JarmuTipus.setVisibility(View.VISIBLE);
-    }*/
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+    }
 }

@@ -4,18 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="regkalk2.kszajgapp.hu.regkalk.RegKalkMain">
+    tools:context="regkalk2.kszajgapp.hu.regkalk.RegKalkMain"
+
+    android:id="@+id/relativeLayout"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    >
 
     <ImageView
+        android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="background"
-
-        android:scaleType="centerCrop"
-        android:src="@drawable/background" />
+        android:src="@drawable/background"
+        android:layout_centerInParent="true"
+        android:scaleType="centerCrop" />
 
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
@@ -32,7 +39,7 @@
             android:focusableInTouchMode="true"
             android:orientation="vertical">
 
-            <Button
+            <!--<Button
                 android:id="@+id/btn_ElsoForgDatum"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -45,7 +52,25 @@
                 android:text="Első forgalombahelyezés időpontja"
                 android:textAlignment="textStart"
                 android:textAllCaps="false"
-                android:textSize="16dp" />
+                android:textSize="16dp" />-->
+
+            <EditText
+                android:id="@+id/et_ElsoForgDatum"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginStart="15dp"
+                android:background="@drawable/input_background"
+                android:hint="Első forgalombahelyezés időpontja"
+                android:inputType="date"
+                android:onClick="showDatePickerDialog"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp"
+                android:textColorHint="#090909"
+                android:textSize="16sp" />
 
             <Spinner
                 android:id="@+id/spn_JarmuTipus"
@@ -54,7 +79,6 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginEnd="15dp"
                 android:layout_marginStart="15dp"
-                android:layout_marginTop="10dp"
                 android:background="@drawable/input_background"
                 android:visibility="gone" />
 
@@ -67,26 +91,6 @@
                 android:layout_marginStart="15dp"
                 android:background="@drawable/input_background"
                 android:visibility="gone" />
-
-            <Spinner
-                android:id="@+id/spn_KornyOszt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginStart="15dp"
-                android:background="@drawable/input_background"
-                android:prompt="@string/KornyOszt"
-                android:visibility="gone" />
-
-            <!-- <Spinner
-                android:id="@+id/spn_Loketterfogat"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginStart="15dp"
-                android:background="@drawable/input_background" />-->
 
             <EditText
                 android:id="@+id/et_Loketterfogat"
@@ -102,7 +106,19 @@
                 android:paddingLeft="10dp"
                 android:paddingTop="10dp"
                 android:textColorHint="#090909"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+            <Spinner
+                android:id="@+id/spn_KornyOszt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginStart="15dp"
+                android:background="@drawable/input_background"
+                android:prompt="@string/KornyOszt"
+                android:visibility="gone" />
 
             <EditText
                 android:id="@+id/et_Teljesitmeny"
@@ -118,7 +134,8 @@
                 android:paddingLeft="10dp"
                 android:paddingTop="10dp"
                 android:textColorHint="#090909"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:visibility="gone" />
 
             <Spinner
                 android:id="@+id/spn_Vizsga"
@@ -127,7 +144,28 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginEnd="15dp"
                 android:layout_marginStart="15dp"
-                android:background="@drawable/input_background" />
+                android:background="@drawable/input_background"
+                android:visibility="gone" />
+
+            <CheckBox
+                android:id="@+id/cb_Osszkerek"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginStart="15dp"
+                android:background="@drawable/input_background"
+                android:text="Összkerék meghajtással rendelkezik" />
+
+            <CheckBox
+                android:id="@+id/cb_Kisteher"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginStart="15dp"
+                android:background="@drawable/input_background"
+                android:text="3.5T alatti kisteher" />
 
             <Button
                 android:id="@+id/btn_Szamol"
@@ -143,18 +181,18 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
 
-        <com.google.android.gms.ads.AdView
-            xmlns:ads="http://schemas.android.com/apk/res-auto"
+        <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
             android:id="@+id/adView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
             ads:adSize="BANNER"
-            ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
-        </com.google.android.gms.ads.AdView>
+            ads:adUnitId="ca-app-pub-3940256099942544/6300978111"></com.google.android.gms.ads.AdView>
 
     </RelativeLayout>
 
