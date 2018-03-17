@@ -348,31 +348,31 @@ public class Kalkulacio implements Parcelable{
         return 0;
     }
 
-    public int getMuszakiVizsgaDij (int jarmutipus, int vizsga, int ervenyesMuszaki, int kisteher, int osszkerek) {
+    public int getMuszakiVizsgaDij () {
         int vizsgadij = 0;
-        if (jarmutipus == 1) {
-            if (ervenyesMuszaki == 1) {
+        if (this.jarmutipus == 1) {
+            if (this.ervenyesMuszaki == 1) {
                 vizsgadij = vizsgadij + 8000;
             }
             else {
                 vizsgadij = vizsgadij + 22800 + 16290;
             }
-            if (osszkerek == 1) {
+            if (this.osszkerek == 1) {
                 vizsgadij = vizsgadij + 4100;
             }
-            if (kisteher == 1) {
+            if (this.kisteher == 1) {
                 vizsgadij = vizsgadij + 800;
             }
         }
-        else if (jarmutipus == 2){
+        else if (this.jarmutipus == 2){
             // TODO: A motoros rész nem biztos, hogy így kell, hogy működjön, ellenőrizni!
-            if (ervenyesMuszaki == 1) {
+            if (this.ervenyesMuszaki == 1) {
                 vizsgadij = vizsgadij + 4350;
             }
             else {
                 vizsgadij = vizsgadij + 4350 + 22800;
             }
         }
-        return 0;
+        return vizsgadij;
     }
 }

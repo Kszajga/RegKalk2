@@ -32,6 +32,10 @@ public class RegKalkEredmeny extends AppCompatActivity {
         TextView tv_RegisztraciosAdo = (TextView) findViewById(R.id.tv_RegisztraciosAdo);
         TextView tv_RegisztraciosAdoErtek = (TextView) findViewById(R.id.tv_RegisztraciosAdoErtek);
 
+        TableRow tr_MuszakiVizsga = (TableRow) findViewById(R.id.tr_MuszakiVizsga);
+        TextView tv_MuszakiVizsga = (TextView) findViewById(R.id.tv_MuszakiVizsga);
+        TextView tv_MuszakiVizsgaErtek = (TextView) findViewById(R.id.tv_MuszakiVizsgaErtek);
+
         TableRow tr_VagyonszerzesiIlletek = (TableRow) findViewById(R.id.tr_VagyonszerzesiIlletek);
         TextView tv_VagyonszerzesiIlletek = (TextView) findViewById(R.id.tv_VagyonszerzesiIlletek);
         TextView tv_VagyonszerzesiIlletekErtek = (TextView) findViewById(R.id.tv_VagyonszerzesiIlletekErtek);
@@ -57,6 +61,13 @@ public class RegKalkEredmeny extends AppCompatActivity {
 
 
         tv_RegisztraciosAdoErtek.setText(Integer.toString(kalkulacio.getRegado()) + " Ft");
+
+        if (kalkulacio.getMuszakiVizsgaDij() == 0) {
+            tr_MuszakiVizsga.setVisibility(View.GONE);
+        }
+        else {
+            tv_MuszakiVizsgaErtek.setText(Integer.toString(kalkulacio.getMuszakiVizsgaDij()));
+        }
 
         if (kalkulacio.getVagyonszerzesiIlletek() == 0) {
             tr_VagyonszerzesiIlletek.setVisibility(View.GONE);

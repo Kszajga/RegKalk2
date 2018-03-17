@@ -237,6 +237,8 @@ public class RegKalkMain extends AppCompatActivity implements AdapterView.OnItem
                         kalkulacio.setJarmutipusnev("Személyautó");
                         // Olyan kellene, hogy ShowNextStep()
                         spn_Uzemanyag.setVisibility(View.VISIBLE);
+                        cb_Osszkerek.setVisibility(View.VISIBLE);
+                        cb_Kisteher.setVisibility(View.VISIBLE);
                         break;
                     case 2:
                         // TODO: Motor számításához szükséges vizuális elemek kihelyezése
@@ -245,14 +247,16 @@ public class RegKalkMain extends AppCompatActivity implements AdapterView.OnItem
                         spn_Uzemanyag.setVisibility(View.GONE);
                         spn_KornyOszt.setVisibility(View.GONE);
                         et_Loketterfogat.setVisibility(View.VISIBLE);
-                        /*fillSpinner(spn_Loketterfogat, getResources().getStringArray(R.array.MotorLoketterfogat)); törölve
-                        spn_Loketterfogat.setVisibility(View.VISIBLE);*/
+                        cb_Osszkerek.setVisibility(View.GONE);
+                        cb_Kisteher.setVisibility(View.GONE);
                         break;
                     case 3:
                         // TODO: Teherautó számításához szükséges vizuális elemek kihelyezése
                         Log.d(TAG, "Teherautó");
                         kalkulacio.setJarmutipusnev("Teherautó");
                         spn_Uzemanyag.setVisibility(View.VISIBLE);
+                        cb_Osszkerek.setVisibility(View.GONE);
+                        cb_Kisteher.setVisibility(View.GONE);
                         break;
                 }
                 break;
@@ -307,7 +311,9 @@ public class RegKalkMain extends AppCompatActivity implements AdapterView.OnItem
     @Override
     public void onClick(View v) {
         boolean checked = false;
-        checked = ((CheckBox) v).isChecked();
+        if (v instanceof CheckBox) {
+            checked = ((CheckBox) v).isChecked();
+        }
         switch (v.getId()){
             case R.id.et_ElsoForgDatum:
                 showDatePickerDialog(v);
@@ -341,6 +347,9 @@ public class RegKalkMain extends AppCompatActivity implements AdapterView.OnItem
             }
             int vagyonszerzesiilletek = kalkulacio.getVagyonszerzesiIlletekDb(kalkulacio.getElteltEvek(), kalkulacio.getTeljesitmeny());
             kalkulacio.setVagyonszerzesiIlletek(vagyonszerzesiilletek);
+
+            //int vizsgadij = kalkulacio.getMuszakiVizsgaDij();
+
 
             Intent intentEredmeny = new Intent(RegKalkMain.this, RegKalkEredmeny.class);
             intentEredmeny.putExtra("kalkulacio", kalkulacio);
